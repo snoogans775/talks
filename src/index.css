@@ -1,0 +1,31 @@
+:root {
+  background-color: bisque;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+a {
+  background-color: black;
+  color: white;
+  font-weight: 'bold';
+}
+
+
+.god-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: 5px dotted pink;
+  width: 80vw;
+  height: 80vh;
+}
+
+canvas {
+  height: 100% !important;
+}
