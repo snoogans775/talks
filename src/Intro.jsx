@@ -3,20 +3,25 @@ import { useNavigate } from 'react-router-dom'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Text3D } from '@react-three/drei'
 import font from './assets/Poor-Story_Regular.json'
-import { radiansToDegrees } from './utils/Objects'
+import { RadiansToDegrees } from './utils/Objects'
 import { normalizeMousePosition } from './utils/Browser'
 import useMouse from './hooks/useMouse'
+import NextButton from './NextButton'
 
-function ImpressiveText({ zoomOnLoad, ...props }) {
+function ImpressiveText({ zoomOnLoad, setShowLightSwitch, ...props }) {
   const ref = useRef()
   const [clicked, click] = useState(false)
   const [zPosition, setZPosition] = useState(-100)
 
   useFrame((state, delta) => {
+    // Zoom in text!
     if (zoomOnLoad && zPosition < 0) setZPosition(zPosition + 1)
+
+    // Rotate when clicked!
     if (clicked) {
       ref.current.rotation.x += 0.05
-      if (radiansToDegrees(ref.current.rotation.x) > 360) {
+      if (RadiansToDegrees(ref.current.rotation.x) > 360) {
+        setShowLightSwitch(true)
         click(false)
         ref.current.rotation.x = 0
       }
@@ -32,14 +37,14 @@ function ImpressiveText({ zoomOnLoad, ...props }) {
       scale={1}
       position={[-4, 0, zPosition]}
     >
-      Welcome
+      Touch me
       <meshStandardMaterial color={'#992288'} />
     </Text3D>
 
   )
 }
 
-function LightSwitch({ clicked, ...props }) {
+function Lightswitch({ clicked, ...props }) {
   const flipperPosition = [
     props.position[0] - 0.1,
     props.position[1] + clicked ? 0.3 : -0.3,
@@ -53,7 +58,7 @@ function LightSwitch({ clicked, ...props }) {
     >
       <boxGeometry args={[1, 2, 0.3]}
       />
-      <meshStandardMaterial color={lightswitchColor}/>
+      <meshStandardMaterial color={lightswitchColor} />
     </mesh>
 
     <mesh
@@ -69,38 +74,24 @@ function LightSwitch({ clicked, ...props }) {
   </>)
 }
 
-function NextButton(props) {
-  const navigate = useNavigate()
-  return (
-    <Text3D
-      {...props}
-      font={font}
-      onClick={() => navigate('one')}
-      scale={1}
-    >
-      Next
-      <meshStandardMaterial color={'#992288'} />
-    </Text3D>
-  )
-}
-
 export default function Intro() {
   const [isLightOn, setIsLightOn] = useState(false)
-  const [showLightswitch, setShowLightSwitch] = useState(true)
+  const [showLightswitch, setShowLightSwitch] = useState(false)
+  const [showNextButton, setShowNextButton] = useState(false)
   const mousePos = useMouse()
   const { mouseX, mouseY } = normalizeMousePosition(mousePos)
 
-  function toggleLight() {
+  function handleLightswitchClick() {
     setIsLightOn(!isLightOn)
+    if (showNextButton === false) setShowNextButton(true)
   }
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <NextButton />
       <Canvas>
         <ambientLight
           color={'#a33'}
-          position={[0,0, 20]}
+          position={[0, 0, 20]}
           intensity={1}
         />
         <pointLight
@@ -108,14 +99,18 @@ export default function Intro() {
           position={[mouseX * 10 - 5, mouseY * 10 - 5, 20]}
           intensity={isLightOn ? 5 : 0}
         />
-        <ImpressiveText zoomOnLoad />
+        <ImpressiveText
+          zoomOnLoad
+          setShowLightSwitch={setShowLightSwitch}
+        />
         {showLightswitch &&
-          <LightSwitch
-            onClick={toggleLight}
+          <Lightswitch
+            onClick={handleLightswitchClick}
             clicked={isLightOn}
             position={[2, 0, 0]}
           />
         }
+        {showNextButton && <NextButton to='/one' position={[1, 1, 1]} />}
       </Canvas>
     </div>
   )

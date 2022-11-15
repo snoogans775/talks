@@ -1,8 +1,10 @@
 import React, { useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Text3D, TransformControls, OrbitControls } from '@react-three/drei'
 import font from './assets/Poor-Story_Regular.json'
 import mockData from './assets/someData.json'
+import { EyeColorMap } from './utils/Maps'
+import { RadiansToDegrees } from './utils/Objects'
 
 function Box(props) {
   // This reference gives us direct access to the THREE.Mesh object
@@ -13,7 +15,7 @@ function Box(props) {
     <mesh
       {...props}
       ref={ref}
-      >
+    >
       <boxGeometry args={[1, 1, 1]} />
       <meshLambertMaterial />
     </mesh>
@@ -24,18 +26,28 @@ function Boxes(props) {
   return mockData.map(item => {
     const [hide, setHide] = useState(false)
     const [hovered, hover] = useState(false)
+    const ref = useRef()
+    
+    // Rotate groups toward camera
+    useFrame((state, delta) => {
+      const rotationInRadians = Math.atan2(
+        item.latitude - state.camera.position.x,
+        item.longitude - state.camera.position.z
+      )
+      ref.current.rotation.y = rotationInRadians
+    })
+
     return (
       <group
         key={item._id}
-        position={[item.longitude / 50, item.latitude / 50, item.latitude / 50]}
+        ref={ref}
+        position={[item.longitude, 0, item.latitude]}
         onClick={() => setHide(!hide)}
         onPointerOver={(event) => hover(true)}
         onPointerOut={(event) => hover(false)}
-        >
+      >
         <Box
           color={item.eyeColor}
-          rotationSpeed={item.age * 0.0003}
-          color={hovered ? 'hotpink' : 'orange'} 
         />
         <group>
           {item.friends.map(friend => {
@@ -57,8 +69,6 @@ export default function StepOne() {
     <Canvas>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      {/* <Box position={[-1.2, 0, 0]} />
-      <Box position={[1.2, 0, 0]} /> */}
       <Boxes />
       <TransformControls mode="translate" />
       <OrbitControls makeDefault />

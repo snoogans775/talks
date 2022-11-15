@@ -1,3 +1,3 @@
-export function radiansToDegrees(radians) {
+export function RadiansToDegrees(radians) {
     return radians * (180/Math.PI)
 }

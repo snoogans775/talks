@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
+import NextButton from './NextButton'
 
 function Box(props) {
   // This reference gives us direct access to the THREE.Mesh object
@@ -25,12 +26,14 @@ function Box(props) {
 }
 
 export default function StepOne() {
+
   return (
     <Canvas>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
       <Box position={[-1.2, 0, 0]} />
       <Box position={[1.2, 0, 0]} />
+      <NextButton to='/two' position={[0,1,0]} />
     </Canvas>
   )
 }
