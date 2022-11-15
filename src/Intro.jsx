@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Canvas, useFrame, useLoader } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { Text3D } from '@react-three/drei'
 import font from './assets/Poor-Story_Regular.json'
 import { radiansToDegrees } from './utils/Objects'
