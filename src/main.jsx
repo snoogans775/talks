@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path='/' element={<Intro />} />
           <Route path='/One' element={<StepOne />} />
           <Route path='/two' element={<StepTwo />} />
-          <Route path='*' element={(<p>No page for you</p>)} />
+          <Route path='*' element={(<a href="/">Start</a>)} />
         </Routes>
       </BrowserRouter>
     </div>

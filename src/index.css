@@ -1,4 +1,5 @@
 :root {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: bisque;
 }
 
@@ -11,9 +12,10 @@ body {
 }
 
 a {
-  background-color: black;
-  color: white;
   font-weight: 'bold';
+  font-size: 5rem;
+  color: "#9944444";
+  text-decoration: none;
 }
 
 
